@@ -2,7 +2,9 @@ package com.example.opencv_test;
 
 import androidx.appcompat.app.AppCompatActivity;
 import android.app.Activity;
+import android.icu.util.Output;
 import android.os.Bundle;
+import android.provider.ContactsContract;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.SurfaceView;
@@ -29,6 +31,7 @@ public class MainActivity extends Activity implements CvCameraViewListener2 {
 
     // Loads camera view of OpenCV for us to use. This lets us see using OpenCV
     private CameraBridgeViewBase mOpenCvCameraView;
+    private ImgProcExample imgPorcExp = new ImgProcExample();
 
     // Used in Camera selection from menu (when implemented)
     private boolean              mIsJavaCamera = true;
@@ -38,6 +41,7 @@ public class MainActivity extends Activity implements CvCameraViewListener2 {
     Mat mRgba;
     Mat mRgbaF;
     Mat mRgbaT;
+    Mat outPut;
 
     private BaseLoaderCallback mLoaderCallback = new BaseLoaderCallback(this) {
         @Override
@@ -75,6 +79,7 @@ public class MainActivity extends Activity implements CvCameraViewListener2 {
         mOpenCvCameraView.setVisibility(SurfaceView.VISIBLE);
 
         mOpenCvCameraView.setCvCameraViewListener(this);
+
     }
 
     @Override
@@ -121,11 +126,8 @@ public class MainActivity extends Activity implements CvCameraViewListener2 {
     public Mat onCameraFrame(CvCameraViewFrame inputFrame) {
 
         // TODO Auto-generated method stub
-        mRgba = inputFrame.rgba();
-        // Rotate mRgba 90 degrees
-//        Core.transpose(mRgba, mRgbaT);
-//        Imgproc.resize(mRgbaT, mRgbaF, mRgbaF.size(), 0,0, 0);
-//        Core.flip(mRgbaF, mRgba, 0 );
-        return mRgba; // This function must return
+//        mRgba = inputFrame.rgba();
+        outPut = imgPorcExp.grayScale(inputFrame);
+        return outPut; // This function must return
     }
 }

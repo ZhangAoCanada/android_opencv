@@ -5,8 +5,8 @@
 5    android:versionName="3.4.3" > <!-- <uses-sdk android:minSdkVersion="8" android:targetSdkVersion="21" /> -->
 6    <uses-sdk
 7        android:minSdkVersion="19"
-7-->/Users/aozhang/AndroidStudioProjects/Opencv_test/openCVLibrary343/src/main/AndroidManifest.xml
+7-->/home/ao/Documents/android_opencv/openCVLibrary343/src/main/AndroidManifest.xml
 8        android:targetSdkVersion="29" />
-8-->/Users/aozhang/AndroidStudioProjects/Opencv_test/openCVLibrary343/src/main/AndroidManifest.xml
+8-->/home/ao/Documents/android_opencv/openCVLibrary343/src/main/AndroidManifest.xml
 9
 10</manifest>
