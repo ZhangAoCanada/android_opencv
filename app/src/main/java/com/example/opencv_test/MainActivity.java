@@ -22,7 +22,10 @@ import org.opencv.android.OpenCVLoader;
 import org.opencv.core.Core;
 import org.opencv.core.CvType;
 import org.opencv.core.Mat;
+import org.opencv.core.Size;
 import org.opencv.imgproc.Imgproc;
+
+import java.util.*;
 
 public class MainActivity extends Activity implements CvCameraViewListener2 {
 
@@ -38,10 +41,17 @@ public class MainActivity extends Activity implements CvCameraViewListener2 {
     private MenuItem             mItemSwitchCamera = null;
 
     // These variables are used (at the moment) to fix camera orientation from 270degree to 0degree
-    Mat mRgba;
-    Mat mRgbaF;
-    Mat mRgbaT;
-    Mat outPut;
+    Mat current_frame;
+    Mat previous_frame;
+    Mat previous_frame1;
+    Mat previous_frame2;
+    Mat previous_frame3;
+    Mat previous_frame4;
+    Mat previous_frame5;
+    Mat previous_frame6;
+    Mat previous_frame7;
+    Mat display_debug;
+    Size scale_size;
 
     private BaseLoaderCallback mLoaderCallback = new BaseLoaderCallback(this) {
         @Override
@@ -111,13 +121,30 @@ public class MainActivity extends Activity implements CvCameraViewListener2 {
 
     public void onCameraViewStarted(int width, int height) {
 
-        mRgba = new Mat(height, width, CvType.CV_8UC4);
-        mRgbaF = new Mat(height, width, CvType.CV_8UC4);
-        mRgbaT = new Mat(width, width, CvType.CV_8UC4);
+        current_frame = new Mat(height, width, CvType.CV_8UC4);
+        previous_frame = new Mat(height, width, CvType.CV_8UC4);
+        previous_frame1 = new Mat(height, width, CvType.CV_8UC4);
+        previous_frame2 = new Mat(height, width, CvType.CV_8UC4);
+        previous_frame3 = new Mat(height, width, CvType.CV_8UC4);
+        previous_frame4 = new Mat(height, width, CvType.CV_8UC4);
+        previous_frame5 = new Mat(height, width, CvType.CV_8UC4);
+        previous_frame6 = new Mat(height, width, CvType.CV_8UC4);
+        previous_frame7 = new Mat(height, width, CvType.CV_8UC4);
+        display_debug = new Mat(height, width, CvType.CV_8UC4);
+
+        scale_size = new Size(width/2, height);
     }
 
     public void onCameraViewStopped() {
-        mRgba.release();
+        current_frame.release();
+        previous_frame.release();
+        previous_frame1.release();
+        previous_frame2.release();
+        previous_frame3.release();
+        previous_frame4.release();
+        previous_frame5.release();
+        previous_frame6.release();
+        previous_frame7.release();
     }
 
     /**
@@ -126,8 +153,30 @@ public class MainActivity extends Activity implements CvCameraViewListener2 {
     public Mat onCameraFrame(CvCameraViewFrame inputFrame) {
 
         // TODO Auto-generated method stub
-//        mRgba = inputFrame.rgba();
-        outPut = imgPorcExp.grayScale(inputFrame);
-        return outPut; // This function must return
+        current_frame = inputFrame.rgba();
+        if (previous_frame.empty()) {
+            display_debug = current_frame.clone();
+        }
+        else {
+            Mat current_resize  = new Mat();
+            Mat previous_resize  = new Mat();
+            List<Mat> src;
+
+            Imgproc.resize(current_frame, current_resize, scale_size);
+            Imgproc.resize(previous_frame, previous_resize, scale_size);
+            src = Arrays.asList(previous_resize, current_resize);
+            Core.hconcat(src, display_debug);
+            current_resize.release();
+            previous_resize.release();
+        }
+        previous_frame2.copyTo(previous_frame);
+//        previous_frame6.copyTo(previous_frame7);
+//        previous_frame5.copyTo(previous_frame6);
+//        previous_frame4.copyTo(previous_frame5);
+//        previous_frame3.copyTo(previous_frame4);
+//        previous_frame2.copyTo(previous_frame3);
+        previous_frame1.copyTo(previous_frame2);
+        current_frame.copyTo(previous_frame1);
+        return display_debug; // This function must return
     }
 }

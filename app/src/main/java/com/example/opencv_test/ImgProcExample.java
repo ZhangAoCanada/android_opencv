@@ -15,8 +15,8 @@ import org.opencv.imgproc.Imgproc;
 public class ImgProcExample {
     Mat outputImg;
 
-    public Mat grayScale (CvCameraViewFrame img_frame) {
-        outputImg = img_frame.rgba();
+    public Mat receiveTwoImgs (Mat current_frame, Mat previous_frame) {
+        outputImg = null;
         return outputImg;
     }
 }
