@@ -46,10 +46,6 @@ public class MainActivity extends Activity implements CvCameraViewListener2 {
     Mat previous_frame1;
     Mat previous_frame2;
     Mat previous_frame3;
-    Mat previous_frame4;
-    Mat previous_frame5;
-    Mat previous_frame6;
-    Mat previous_frame7;
     Mat display_debug;
     Size scale_size;
 
@@ -126,10 +122,6 @@ public class MainActivity extends Activity implements CvCameraViewListener2 {
         previous_frame1 = new Mat(height, width, CvType.CV_8UC4);
         previous_frame2 = new Mat(height, width, CvType.CV_8UC4);
         previous_frame3 = new Mat(height, width, CvType.CV_8UC4);
-        previous_frame4 = new Mat(height, width, CvType.CV_8UC4);
-        previous_frame5 = new Mat(height, width, CvType.CV_8UC4);
-        previous_frame6 = new Mat(height, width, CvType.CV_8UC4);
-        previous_frame7 = new Mat(height, width, CvType.CV_8UC4);
         display_debug = new Mat(height, width, CvType.CV_8UC4);
 
         scale_size = new Size(width/2, height);
@@ -141,42 +133,52 @@ public class MainActivity extends Activity implements CvCameraViewListener2 {
         previous_frame1.release();
         previous_frame2.release();
         previous_frame3.release();
-        previous_frame4.release();
-        previous_frame5.release();
-        previous_frame6.release();
-        previous_frame7.release();
     }
 
     /**
      * Change things or add functions here to see what you can do.
      */
     public Mat onCameraFrame(CvCameraViewFrame inputFrame) {
-
-        // TODO Auto-generated method stub
+        //declaration
+        Mat grayImg = new Mat();
+        Mat sobel_raw = new Mat();
+        int x_order = 1;
+        int y_order = 0;
+        // get the current frame using opencv
         current_frame = inputFrame.rgba();
-        if (previous_frame.empty()) {
-            display_debug = current_frame.clone();
-        }
-        else {
-            Mat current_resize  = new Mat();
-            Mat previous_resize  = new Mat();
-            List<Mat> src;
 
-            Imgproc.resize(current_frame, current_resize, scale_size);
-            Imgproc.resize(previous_frame, previous_resize, scale_size);
-            src = Arrays.asList(previous_resize, current_resize);
-            Core.hconcat(src, display_debug);
-            current_resize.release();
-            previous_resize.release();
-        }
-        previous_frame2.copyTo(previous_frame);
-//        previous_frame6.copyTo(previous_frame7);
-//        previous_frame5.copyTo(previous_frame6);
-//        previous_frame4.copyTo(previous_frame5);
-//        previous_frame3.copyTo(previous_frame4);
-//        previous_frame2.copyTo(previous_frame3);
-        previous_frame1.copyTo(previous_frame2);
-        current_frame.copyTo(previous_frame1);
+       /** get current frame and previous frame, prepare for passing into func **/
+//        if (previous_frame.empty()) {
+//            display_debug = current_frame.clone();
+//        }
+//        else {
+//            Mat current_resize  = new Mat();
+//            Mat previous_resize  = new Mat();
+//
+//            List<Mat> src;
+//            Imgproc.resize(current_frame, current_resize, scale_size);
+//            Imgproc.resize(previous_frame, previous_resize, scale_size);
+//            src = Arrays.asList(previous_resize, current_resize);
+//            Core.hconcat(src, display_debug);
+//            current_resize.release();
+//            previous_resize.release();
+//        }
+//        previous_frame2.copyTo(previous_frame);
+////        previous_frame2.copyTo(previous_frame3);
+//        previous_frame1.copyTo(previous_frame2);
+//        current_frame.copyTo(previous_frame1);
+
+        /** try Imgproc **/
+        Imgproc.cvtColor(current_frame, grayImg, Imgproc.COLOR_RGB2GRAY);
+        Imgproc.Sobel(grayImg, sobel_raw, CvType.CV_16S, x_order, y_order);
+        Core.convertScaleAbs(sobel_raw, display_debug);
+//        Core.normalize(display_debug, display_debug, 0, 255, Core.NORM_MINMAX);
+
+        String test = Core.minMaxLoc(sobel_raw).toString();
+
+        grayImg.release();
+        sobel_raw.release();
+
         return display_debug; // This function must return
     }
 }
